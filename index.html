@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Balances Generales</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Agrega esta línea para vincular tu archivo CSS externo -->
+    
+
+</head>
+<body>
+    <h1>Balances Generales</h1>
+    <div id="cuentas-container">
+        <div id="datos-ingresados">Datos ingresados:</div>
+        <div id="lista-cuentas">
+            <!-- Las cuentas se agregarán aquí dinámicamente -->
+        </div>
+    </div>
+    <div>
+        <label for="nombre-cuenta">Ingresa el código de Cuenta:</label>
+        <input type="text" id="nombre-cuenta" maxlength="4" oninput="validarNumeros(this)">
+        <label for="monto-cuenta">Monto:</label>
+        <input type="text" id="monto-cuenta">
+        <button onclick="agregarCuenta()">Agregar Cuenta</button>
+    </div>
+    <div>
+        <button onclick="generarBalanceGeneral()">Generar Balance General</button>
+    </div>
+    <!-- Elemento div para mostrar el balance general -->
+    <div id="balance-general"></div>
+
+    <script>
+        // Clase Cuenta
+        class Cuenta {
+            constructor(codigo, nombre, monto, tipo, tipoEspecifico) {
+                this.codigo = codigo;
+                this.nombre = nombre;
+                this.monto = parseFloat(monto); // Convertir el monto a tipo numérico
+                this.tipo = tipo;
+                this.tipoEspecifico = tipoEspecifico;
+            }
+        }
+
+        // Array para almacenar las cuentas ingresadas
+        let cuentas = [];
+
+        // Función para determinar el tipo de cuenta
+        function determinarTipoCuenta(codigo) {
+            const activo = {inicio: 1000, fin: 1999};
+            const pasivo = {inicio: 2000, fin: 2999};
+            const capital = {inicio: 3000, fin: 3999};
+
+            codigo = parseInt(codigo);
+            if (codigo >= activo.inicio && codigo <= activo.fin) {
+                return 'Activo';
+            } else if (codigo >= pasivo.inicio && codigo <= pasivo.fin) {
+                return 'Pasivo';
+            } else if (codigo >= capital.inicio && codigo <= capital.fin) {
+                return 'Capital Contable';
+            } else {
+                return 'Otro';
+            }
+        }
+
+        // Función para determinar el tipo específico de activo, pasivo o capital contable
+        function determinarTipoEspecifico(codigo, tipoCuenta) {
+            codigo = parseInt(codigo);
+            if (tipoCuenta === 'Activo') {
+                if (codigo >= 1000 && codigo <= 1200) {
+                    return 'Activo Circulante';
+                } else if (codigo >= 1200 && codigo <= 1300) {
+                    return 'Activo Fijo';
+                } else if (codigo >= 1300 && codigo <= 1400) {
+                    return 'Activo Diferido';
+                }
+            } else if (tipoCuenta === 'Pasivo') {
+                if (codigo >= 2000 && codigo <= 2300) {
+                    return 'Pasivo Circulante';
+                } else if (codigo >= 2200 && codigo <= 2300) {
+                    return 'Pasivo Fijo';
+                } else if (codigo >= 2300 && codigo <= 2400) {
+                    return 'Pasivo Diferido';
+                }
+            } else if (tipoCuenta === 'Capital Contable') {
+                if (codigo === 3000) {
+                    return 'Capital Contable';
+                }
+            }
+            return 'Otro';
+        }
+
+        // Función para validar que solo se ingresen números en el campo de código de cuenta
+        function validarNumeros(input) {
+            input.value = input.value.replace(/[^\d]/g, ''); // Remueve cualquier caracter no numérico
+        }
+
+        // Función para obtener el nombre de la cuenta a partir de su código
+        function obtenerNombreCuenta(codigo) {
+            const cuentas = {
+                '1000': 'Activo',
+                '1100': 'Activo circulante',
+                '1101': 'Caja',
+                '1102': 'Bancos',
+                '1103': 'Clientes',
+                '1104': 'Mercancías / Inventarios',
+                '1105': 'Documentos por cobrar',
+                '1106': 'Deudores diversos',
+                '1107': 'IVA acreditable pagado',
+                '1108': 'IVA por acreditar',
+                '1109': 'IVA a favor',
+                '1200': 'Activo fijo',
+                '1201': 'Terreno',
+                '1202': 'Mobiliario y equipo',
+                '1203': 'Equipo de transporte',
+                '1204': 'Edificio',
+                '1205': 'Depósitos en garantía',
+                '1206': 'Equipo de cómputo',
+                '1300': 'Activo diferido',
+                '1301': 'Gastos de instalación',
+                '1302': 'Papelería y útiles de oficina',
+                '1303': 'Rentas pagadas por adelantado',
+                '1304': 'Seguros pagados por adelantado',
+                '2000': 'Pasivo',
+                '2100': 'Pasivo circulante',
+                '2101': 'Documentos por pagar',
+                '2102': 'Proveedores',
+                '2103': 'Acreedores diversos',
+                '2104': 'Sueldos por pagar',
+                '2105': 'Impuestos por pagar',
+                '2106': 'IVA por pagar',
+                '2107': 'IVA trasladado cobrado',
+                '2108': 'IVA por trasladar',
+                '2200': 'Pasivo fijo',
+                '2201': 'Hipotecas por pagar',
+                '2300': 'Pasivo diferido',
+                '2301': 'Rentas cobradas por anticipado',
+                '2302': 'Intereses cobrados por anticipado',
+                '3000': 'Capital contable'
+            };
+
+            return cuentas[codigo] || 'Otro';
+        }
+
+        // Función para agregar una nueva cuenta
+        function agregarCuenta() {
+            var codigo = document.getElementById("nombre-cuenta").value;
+            var nombre = obtenerNombreCuenta(codigo);
+            var monto = document.getElementById("monto-cuenta").value;
+            var tipo = determinarTipoCuenta(codigo);
+            var tipoEspecifico = determinarTipoEspecifico(codigo, tipo);
+            if (tipo === 'Activo' || tipo === 'Pasivo' || tipo === 'Capital Contable') {
+                tipo = tipoEspecifico;
+            }
+            var cuenta = new Cuenta(codigo, nombre, monto, tipo, tipoEspecifico);
+            cuentas.push(cuenta);
+            var cuentaHTML = '<div class="cuenta">' + cuenta.codigo + ' - ' + cuenta.nombre + ' - ' + cuenta.monto + ' - ' + cuenta.tipo + '</div>';
+            document.getElementById("lista-cuentas").innerHTML += cuentaHTML;
+            document.getElementById("nombre-cuenta").value = '';
+            document.getElementById("monto-cuenta").value = '';
+        }
+
+        // Función para generar el balance general
+        function generarBalanceGeneral() {
+            let activosCirculantes = 0;
+            let activosFijos = 0;
+            let activosDiferidos = 0;
+            let pasivosCirculantes = 0;
+            let pasivosFijos = 0;
+            let pasivosDiferidos = 0;
+
+            // Calcular montos de cada tipo de cuenta
+            cuentas.forEach(cuenta => {
+                switch (cuenta.tipoEspecifico) {
+                    case 'Activo Circulante':
+                        activosCirculantes += cuenta.monto;
+                        break;
+                    case 'Activo Fijo':
+                        activosFijos += cuenta.monto;
+                        break;
+                    case 'Activo Diferido':
+                        activosDiferidos += cuenta.monto;
+                        break;
+                    case 'Pasivo Circulante':
+                        pasivosCirculantes += cuenta.monto;
+                        break;
+                    case 'Pasivo Fijo':
+                        pasivosFijos += cuenta.monto;
+                        break;
+                    case 'Pasivo Diferido':
+                        pasivosDiferidos += cuenta.monto;
+                        break;
+                    default:
+                        break;
+                }
+            });
+
+            // Calcular total de activos, pasivos y capital contable
+            const totalActivos = activosCirculantes + activosFijos + activosDiferidos;
+            const totalPasivos = pasivosCirculantes + pasivosFijos + pasivosDiferidos;
+            const capitalContable = totalActivos - totalPasivos;
+
+            // Mostrar balance general en el elemento div
+            const balanceGeneralHTML = `
+                <h2>Balance General</h2>
+                <p><strong>Activos:</strong></p>
+                <ul>
+                    <li>Activos Circulantes: ${activosCirculantes.toFixed(2)}</li>
+                    <li>Activos Fijos: ${activosFijos.toFixed(2)}</li>
+                    <li>Activos Diferidos: ${activosDiferidos.toFixed(2)}</li>
+                    <li>Total de Activos: ${totalActivos.toFixed(2)}</li>
+                </ul>
+                <p><strong>Pasivos:</strong></p>
+                <ul>
+                    <li>Pasivos Circulantes: ${pasivosCirculantes.toFixed(2)}</li>
+                    <li>Pasivos Fijos: ${pasivosFijos.toFixed(2)}</li>
+                    <li>Pasivos Diferidos: ${pasivosDiferidos.toFixed(2)}</li>
+                    <li>Total de Pasivos: ${totalPasivos.toFixed(2)}</li>
+                </ul>
+                <p><strong>Capital Contable:</strong> ${capitalContable.toFixed(2)}</p>
+            `;
+            document.getElementById("balance-general").innerHTML = balanceGeneralHTML;
+        }
+    </script>
+</body>
+</html>
