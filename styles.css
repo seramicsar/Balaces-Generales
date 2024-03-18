@@ -1,0 +1,93 @@
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f1f1f1; /* Fondo gris claro */
+    padding: 20px;
+    margin: 0;
+    background-image: linear-gradient(to right, #4cd5ff, #54e346); /* Gradiente de fondo con tonos de verde y azul */
+    color: #333; /* Color del texto principal más oscuro */
+}
+
+h1 {
+    margin-bottom: 20px; /* Añade un margen inferior al título */
+    color: #045c30; /* Verde azulado */
+}
+
+#cuentas-container {
+    max-height: 300px;
+    overflow-y: scroll;
+    border: 2px solid #0aa959; /* Borde verde azulado */
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.cuenta {
+    margin-bottom: 10px; /* Espaciado extra entre cuentas */
+    padding: 8px; /* Añade relleno a las cuentas */
+    border-radius: 8px; /* Bordes redondeados */
+    background-color: #d0e8f7; /* Fondo azul claro */
+    color: #333; /* Color del texto principal más oscuro */
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 20px;
+}
+
+th, td {
+    border: 1px solid #14d173; /* Borde verde azulado */
+    padding: 10px; /* Aumenta el relleno */
+    text-align: left;
+    color: #333; /* Color del texto principal más oscuro */
+}
+
+th {
+    background-color: #0dba63; /* Fondo verde azulado para los encabezados */
+    color: white; /* Texto blanco en encabezados */
+}
+
+input[type="text"], button {
+    padding: 12px; /* Aumenta el tamaño del texto de entrada y botones */
+    border: none;
+    border-radius: 20px; /* Bordes redondeados */
+    margin-right: 20px; /* Mayor espacio entre elementos */
+}
+
+button {
+    background-color: #159809; /* Verde lima */
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s; /* Transición suave al pasar el cursor */
+}
+
+button:hover {
+    background-color: #3ddc49; /* Verde lima más claro al pasar el cursor */
+}
+
+#balance-general {
+    background-color: #fff;
+    padding: 30px; /* Aumenta el relleno */
+    margin-top: 30px; /* Mayor espacio desde arriba */
+    border-radius: 20px; /* Bordes redondeados */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Sombra más pronunciada */
+}
+
+#balance-general h2 {
+    color: #046e39; /* Verde azulado */
+}
+
+#balance-general p {
+    font-size: 20px; /* Tamaño de fuente más grande */
+    margin-bottom: 20px; /* Mayor espacio inferior */
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+ul li {
+    margin-bottom: 8px; /* Espacio extra entre elementos de lista */
+}
